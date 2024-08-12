@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get "posts", to: "posts#index"
+  post "posts", to: "posts#create"
+  get "posts/:id", to: "posts#show"
+  put "posts/:id/update", to: "posts#update"
+  delete "posts/:id/destroy", to: "posts#destroy"
+
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',

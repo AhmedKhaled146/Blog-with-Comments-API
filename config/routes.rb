@@ -1,10 +1,16 @@
 Rails.application.routes.draw do
+
   get "posts", to: "posts#index"
+  # Current_user actions
+  get ":id", to: "current_user#index"
+
+  # Posts actions
   post "posts", to: "posts#create"
   get "posts/:id", to: "posts#show"
-  put "posts/:id/update", to: "posts#update"
-  delete "posts/:id/destroy", to: "posts#destroy"
+  put "posts/:id", to: "posts#update"
+  delete "posts/:id", to: "posts#destroy"
 
+  # Authentication actions
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',

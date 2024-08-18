@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_post, only: [:update, :show, :destroy]
+  before_action :authorize_post_owner, only: [:update, :destroy]
 
 
   def index
@@ -35,27 +36,19 @@ class PostsController < ApplicationController
 
 
   def update
-    if @post.user_id == current_user.id
-      if @post.update(post_params)
-        render json: @post
-      else
-        render json: @post.errors.full_messages, status: :unprocessable_entity
-      end
+    if @post.update(post_params)
+      render json: @post
     else
-      render json: { error: "You are not authorized to update this post. You are not the author" }, status: :forbidden
+      render json: @post.errors.full_messages, status: :unprocessable_entity
     end
   end
 
 
   def destroy
-    if @post.user_id == current_user.id
-      if @post.destroy
-        render json: {message: "deleted successfully"}
-      else
-        render json: @post.errors.full_messages, status: :unprocessable_entity
-      end
+    if @post.destroy
+      render json: {message: "deleted successfully"}
     else
-      render json: { error: "You are not authorized to destroy this post. You are not the author" }, status: :forbidden
+      render json: @post.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -78,5 +71,11 @@ class PostsController < ApplicationController
 
   def post_params
     params.require(:post).permit(:title, :content)
+  end
+
+  def authorize_post_owner
+    unless @post.user_id == current_user.id
+      render json: { error: "You are not authorized to perform this action" }, status: :forbidden
+    end
   end
 end

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   get "posts", to: "posts#index"
+
   # Current_user actions
   get ":id", to: "current_user#index"
 
@@ -10,7 +11,21 @@ Rails.application.routes.draw do
   put "posts/:id", to: "posts#update"
   delete "posts/:id", to: "posts#destroy"
 
-  # Authentication actions
+  # Comments actions
+  get "posts/:id/comments", to: "comments#index"
+  get "posts/:id/comments/:comment_id", to: "comments#show"
+  post "posts/:id/comments", to: "comments#create"
+  put "posts/:id/comments/:comment_id", to: "comments#update"
+  delete "posts/:id/comments/:comment_id", to: "comments#destroy"
+
+  # Replies action
+  get "posts/:post_id/comments/:comment_id/replies", to: "replies#index"
+  get "posts/:post_id/comments/:comment_id/replies/:id", to: "replies#show"
+  post "posts/:post_id/comments/:comment_id/replies", to: "replies#create"
+  put "posts/:post_id/comments/:comment_id/replies/:id", to: "replies#update"
+  delete "posts/:post_id/comments/:comment_id/replies/:id", to: "replies#destroy"
+
+    # Authentication actions
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
@@ -20,6 +35,7 @@ Rails.application.routes.draw do
      sessions: 'users/sessions',
      registrations: 'users/registrations'
    }
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
